@@ -1,42 +1,32 @@
-//HEADER!!!
-
 #include "../include/philosophers.h"
 
-int ft_argum_comprobation(int argc, char **argv);
+// main.c
 
 int main(int argc, char **argv)
 {
-    // Check if the number of arguments is correct
-    if (ft_argum_comprobation(argc, argv) == 1)
-        return (1);
+    t_data  data;
 
-    return (0);
-}
-
-int ft_argum_comprobation(int argc, char **argv)
-{
-    int i;
-    int j;
-
-    i = 1;
-    if (argc != 5 && argc != 6)
+    // Inicializar datos
+    if (init_data(&data, argc, argv))
     {
-        printf("Error: Wrong number of arguments\n");
+        printf("Error en la inicialización de datos.\n");
         return (1);
     }
-    while (i < argc)
+    // Inicializar filósofos
+    if (init_philosophers(&data))
     {
-        j = 0;
-        while (argv[i][j])
-        {
-            if (argv[i][j] < '0' || argv[i][j] > '9')
-            {
-                printf("Error: Argument %d is not a number\n", i);
-                return (1);
-            }
-            j++;
-        }
-        i++;
+        printf("Error en la inicialización de filósofos.\n");
+        free_resources(&data);
+        return (1);
     }
+    // Iniciar simulación
+    if (start_simulation(&data))
+    {
+        printf("Error en la simulación.\n");
+        free_resources(&data);
+        return (1);
+    }
+    // Limpiar recursos
+    free_resources(&data);
     return (0);
 }
