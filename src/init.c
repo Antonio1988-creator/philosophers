@@ -1,44 +1,5 @@
 #include "../include/philosophers.h"
 
-// init.c
-
-// Función para convertir cadena a entero con validación básica
-int ft_atoi(const char *str)
-{
-    int             i;
-    int             sign;
-    int             res;
-
-    i = 0;
-    sign = 1;
-    res = 0;
-    while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
-        i++;
-    if (str[i] == '-' || str[i] == '+')
-    {
-        if (str[i] == '-')
-            sign = -1;
-        i++;
-    }
-    while (str[i] >= '0' && str[i] <= '9')
-    {
-        res = res * 10 + (str[i] - '0');
-        i++;
-    }
-    return (res * sign);
-}
-
-// Función para obtener el tiempo actual en milisegundos
-long long get_time_in_ms(void)
-{
-    struct timeval  time;
-    long long       ms;
-
-    gettimeofday(&time, NULL);
-    ms = (time.tv_sec * 1000) + (time.tv_usec / 1000);
-    return (ms);
-}
-
 // Función para inicializar los datos compartidos
 int init_data(t_data *data, int argc, char **argv)
 {

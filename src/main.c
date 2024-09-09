@@ -1,5 +1,4 @@
 #include "../include/philosophers.h"
-
 // main.c
 
 int main(int argc, char **argv)

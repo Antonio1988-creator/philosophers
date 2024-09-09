@@ -1,15 +1,5 @@
 // threads.c
 #include "../include/philosophers.h"
-// Función para imprimir el estado de un filósofo de manera segura
-void print_state(t_philosopher *philosopher, char *state)
-{
-    long long timestamp;
-
-    pthread_mutex_lock(&philosopher->data->print_lock);
-    timestamp = get_time_in_ms() - philosopher->data->start_time;
-    printf("%lld %d %s\n", timestamp, philosopher->id, state);
-    pthread_mutex_unlock(&philosopher->data->print_lock);
-}
 
 // Rutina que ejecuta cada filósofo
 void *philosopher_routine(void *arg)
