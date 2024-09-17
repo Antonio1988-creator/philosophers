@@ -1,59 +1,69 @@
+#ifndef PHILO_H
+# define PHILO_H
 
-// philo.h
-#ifndef PHILOSOPHERS_H
-# define PHILOSOPHERS_H
+/*
+** libraries
+*/
 
 # include <stdio.h>
-# include <stdlib.h>
-# include <pthread.h>
-# include <sys/time.h>
 # include <unistd.h>
-# include <string.h>
+# include <stdlib.h>
+# include <sys/time.h>
+# include <pthread.h>
 
-// Estructura principal que contiene los datos compartidos
-typedef struct s_data {
-    int             num_philosophers;
-    long long       time_to_die;
-    long long       time_to_eat;
-    long long       time_to_sleep;
-    int             must_eat_count;
-    long long       start_time;
-    int             all_ate;
-    pthread_mutex_t *forks;
-    pthread_mutex_t print_lock;
-    pthread_t       *threads;
-    struct s_philosopher *philosophers;
-}               t_data;
+/*
+** structures
+*/
 
-// Estructura para cada filósofo
-typedef struct s_philosopher {
-    int             id;
-    int             eat_count;
-    long long       last_meal;
-    pthread_mutex_t *left_fork;
-    pthread_mutex_t *right_fork;
-    t_data          *data;
-}               t_philosopher;
+typedef struct s_arg
+{
+	int						total;
+	int						die;
+	int						eat;
+	int						sleep;
+	int						m_eat;
+	long int				start_t;
+	pthread_mutex_t			write_mutex;
+	pthread_mutex_t			dead;
+	pthread_mutex_t			time_eat;
+	pthread_mutex_t			finish;
+	int						nb_p_finish;
+	int						stop;
+}							t_arg;
 
-// Prototipos de funciones
-// init.c
-int             init_data(t_data *data, int argc, char **argv);
-int             init_philosophers(t_data *data);
+typedef struct s_philo
+{
+	int						id;
+	pthread_t				thread_id;
+	pthread_t				thread_death_id;
+	pthread_mutex_t			*r_f;
+	pthread_mutex_t			l_f;
+	t_arg					*pa;
+	long int				ms_eat;
+	unsigned int			nb_eat;
+	int						finish;
+}							t_philo;
 
-// threads.c
-void            *philosopher_routine(void *arg);
-int             create_threads(t_data *data);
-int             join_threads(t_data *data);
+typedef struct s_p
+{
+	t_philo					*ph;
+	t_arg					a;
+}							t_p;
 
-// simulation.c
-int             start_simulation(t_data *data);
+/*
+** functions
+*/
 
-// exit.c
-void            free_resources(t_data *data);
-
-// utils.c (Opcional para funciones auxiliares)
-long long       get_time_in_ms(void);
-void            print_state(t_philosopher *philosopher, char *state);
-int             ft_atoi(const char *str);
+int				parse_args(int argc, char **argv, t_p *p);
+int				initialize(t_p *p);
+int				ft_exit(char *str);
+void			write_status(char *str, t_philo *ph);
+long int		actual_time(void);
+void			ft_putstr_fd(char *s, int fd);
+void			ft_usleep(long int time_in_ms);
+int				threading(t_p *p);
+void			activity(t_philo *ph);
+int				check_death(t_philo *ph, int i);
+int				ft_strlen(char *str);
 
 #endif

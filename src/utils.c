@@ -1,50 +1,48 @@
-// utils.c
 #include "../include/philosophers.h"
 
-// Función para obtener el tiempo actual en milisegundos
-long long get_time_in_ms(void)
+void	ft_putchar_fd(char c, int fd)
 {
-    struct timeval  time;
-    long long       ms;
-
-    gettimeofday(&time, NULL);
-    ms = (time.tv_sec * 1000) + (time.tv_usec / 1000);
-    return (ms);
+	if (fd >= 0)
+		write(fd, &c, 1);
 }
 
-// Función para imprimir el estado de un filósofo de manera segura
-void print_state(t_philosopher *philosopher, char *state)
+void	ft_putstr_fd(char *s, int fd)
 {
-    long long timestamp;
-
-    pthread_mutex_lock(&philosopher->data->print_lock);
-    timestamp = get_time_in_ms() - philosopher->data->start_time;
-    printf("%lld %d %s\n", timestamp, philosopher->id, state);
-    pthread_mutex_unlock(&philosopher->data->print_lock);
+	if (fd >= 0)
+	{
+		while (s && *s)
+		{
+			write(fd, &*s, 1);
+			s++;
+		}
+	}
 }
 
-// Función para convertir cadena a entero con validación básica
-int ft_atoi(const char *str)
+void	ft_putnbr_fd(long int ln, int fd)
 {
-    int             i;
-    int             sign;
-    int             res;
+	if (ln < 0)
+	{
+		ln *= -1;
+		ft_putchar_fd('-', fd);
+	}
+	if (ln >= 10)
+	{
+		ft_putnbr_fd(ln / 10, fd);
+		ft_putnbr_fd(ln % 10, fd);
+	}
+	else
+	{
+		if (fd >= 0)
+			ft_putchar_fd(ln + 48, fd);
+	}
+}
 
-    i = 0;
-    sign = 1;
-    res = 0;
-    while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
-        i++;
-    if (str[i] == '-' || str[i] == '+')
-    {
-        if (str[i] == '-')
-            sign = -1;
-        i++;
-    }
-    while (str[i] >= '0' && str[i] <= '9')
-    {
-        res = res * 10 + (str[i] - '0');
-        i++;
-    }
-    return (res * sign);
+int	ft_strlen(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
 }
